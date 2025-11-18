@@ -11,6 +11,19 @@ import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
 import { HeroUIProvider } from "@heroui/system";
 
+// Enable MSW in development mode
+async function enableMocking() {
+  if (import.meta.env.MODE !== 'development') {
+    return
+  }
+
+  const { worker } = await import('./shared/lib/msw/browser')
+
+  return worker.start({
+    onUnhandledRequest: 'warn',
+  })
+}
+
 // Create a new router instance
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext();
@@ -33,19 +46,21 @@ declare module "@tanstack/react-router" {
 }
 
 // Render the app
-const rootElement = document.getElementById("app");
-if (rootElement && !rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <StrictMode>
-      <HeroUIProvider>
-        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-          <RouterProvider router={router} />
-        </TanStackQueryProvider.Provider>
-      </HeroUIProvider>
-    </StrictMode>
-  );
-}
+enableMocking().then(() => {
+  const rootElement = document.getElementById("app");
+  if (rootElement && !rootElement.innerHTML) {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <StrictMode>
+        <HeroUIProvider>
+          <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+            <RouterProvider router={router} />
+          </TanStackQueryProvider.Provider>
+        </HeroUIProvider>
+      </StrictMode>
+    );
+  }
+})
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
