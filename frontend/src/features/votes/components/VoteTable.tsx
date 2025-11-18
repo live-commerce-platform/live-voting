@@ -21,9 +21,9 @@ interface VoteTableProps {
 
 const columns = [
   { key: "title", label: "투표 주제" },
-  { key: "author", label: "작성자", width: "w-32", align: "center" as const },
-  { key: "status", label: "상태", width: "w-24", align: "center" as const },
-  { key: "actions", label: "작업", width: "w-20", align: "center" as const },
+  { key: "author", label: "작성자", style: "w-32", align: "center" as const },
+  { key: "status", label: "상태", style: "w-24", align: "center" as const },
+  { key: "actions", label: "작업", style: "w-20", align: "center" as const },
 ];
 
 export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
@@ -100,7 +100,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
             <TableColumn
               key={column.key}
               align={column.align}
-              className={column.width}
+              className={column.style}
             >
               {column.label}
             </TableColumn>
@@ -119,7 +119,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
           {(vote) => (
             <TableRow
               key={vote.id}
-              className="cursor-pointer transition-colors hover:bg-default-50"
+              className="cursor-pointer transition-colors hover:bg-default-100 h-16"
               onClick={() => handleRowClick(vote)}
             >
               {(columnKey) => (
