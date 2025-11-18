@@ -13,6 +13,7 @@ import { PlusCircle, XCircle } from "lucide-react";
 import type { Vote } from "../types/vote.types";
 import { VoteStatusBadge } from "./VoteStatusBadge";
 import { useCloseVote } from "../hooks/useCloseVote";
+import { ButtonLink } from "@/components/ButtonLink";
 
 interface VoteTableProps {
   data?: Vote[];
@@ -21,9 +22,9 @@ interface VoteTableProps {
 
 const columns = [
   { key: "title", label: "투표 주제" },
-  { key: "author", label: "작성자", style: "w-32", align: "center" as const },
-  { key: "status", label: "상태", style: "w-24", align: "center" as const },
-  { key: "actions", label: "작업", style: "w-20", align: "center" as const },
+  { key: "author", label: "작성자", align: "center" as const },
+  { key: "status", label: "상태", align: "center" as const },
+  { key: "actions", label: "작업", align: "center" as const },
 ];
 
 export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
@@ -42,17 +43,13 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
     closeVoteMutation.mutate(voteId);
   };
 
-  const handleCreateVote = () => {
-    // TODO: 투표 생성 페이지가 구현되면 활성화
-    // navigate({ to: '/votes/new' })
-    alert("투표 생성 페이지는 아직 구현되지 않았습니다.");
-  };
-
   const renderCell = (vote: Vote, columnKey: React.Key) => {
     switch (columnKey) {
       case "title":
         return (
-          <span className="font-semibold text-default-900">{vote.title}</span>
+          <span className="font-semibold text-default-900 group-hover:underline">
+            {vote.title}
+          </span>
         );
       case "author":
         return <span className="text-default-600">{vote.author}</span>;
@@ -83,25 +80,22 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <Button
+        <ButtonLink
+          to="/votes/new"
           color="primary"
-          onPress={handleCreateVote}
           size="lg"
           className="font-semibold"
           startContent={<PlusCircle className="size-6" />}
+          preload="intent"
         >
           투표 생성
-        </Button>
+        </ButtonLink>
       </div>
 
       <Table aria-label="투표 목록">
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn
-              key={column.key}
-              align={column.align}
-              className={column.style}
-            >
+            <TableColumn key={column.key} align={column.align}>
               {column.label}
             </TableColumn>
           )}
@@ -119,7 +113,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
           {(vote) => (
             <TableRow
               key={vote.id}
-              className="cursor-pointer transition-colors hover:bg-default-100 h-16"
+              className="cursor-pointer group transition-colors hover:bg-default-100 h-16"
               onClick={() => handleRowClick(vote)}
             >
               {(columnKey) => (
