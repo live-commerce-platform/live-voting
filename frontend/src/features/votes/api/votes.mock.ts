@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { Vote } from '../types/vote.types'
+import type { CreateVoteRequest, Vote } from '../types/vote.types'
 
 // Mock 데이터
 let mockVotes: Vote[] = [
@@ -39,6 +39,23 @@ export const voteHandlers = [
   // 투표 목록 조회
   http.get('/api/votes', () => {
     return HttpResponse.json(mockVotes)
+  }),
+
+  // 투표 생성
+  http.post('/api/votes', async ({ request }) => {
+    const body = (await request.json()) as CreateVoteRequest
+
+    const newVote: Vote = {
+      id: String(mockVotes.length + 1),
+      title: body.title,
+      status: 'OPEN',
+      author: '현재 사용자', // TODO: 실제 인증된 사용자로 대체
+      createdAt: new Date().toISOString(),
+    }
+
+    mockVotes = [newVote, ...mockVotes]
+
+    return HttpResponse.json(newVote, { status: 201 })
   }),
 
   // 투표 종료
