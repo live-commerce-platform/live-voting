@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button, Select, SelectItem } from "@heroui/react";
+import type { Selection } from "@heroui/react";
 import { useState } from "react";
 import { Suspense, ErrorBoundary } from "@suspensive/react";
 import { SuspenseQuery } from "@suspensive/react-query";
@@ -16,9 +17,10 @@ export const Route = createFileRoute("/")({
 function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [selectedMemberId, setSelectedMemberId] = useState<string>("");
+  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
 
   const handleLogin = (members: Member[]) => {
+    const selectedMemberId = Array.from(selectedKeys)[0] as string;
     if (!selectedMemberId) return;
 
     const selectedMember = members.find(
@@ -54,11 +56,8 @@ function LoginPage() {
                       <Select
                         label="멤버 선택"
                         placeholder="멤버를 선택하세요"
-                        selectedKeys={selectedMemberId ? [selectedMemberId] : []}
-                        onSelectionChange={(keys) => {
-                          const selected = Array.from(keys)[0] as string;
-                          setSelectedMemberId(selected);
-                        }}
+                        selectedKeys={selectedKeys}
+                        onSelectionChange={setSelectedKeys}
                         className="w-full"
                         size="lg"
                         variant="bordered"
@@ -73,7 +72,7 @@ function LoginPage() {
                         color="primary"
                         size="lg"
                         className="w-full"
-                        isDisabled={!selectedMemberId}
+                        isDisabled={selectedKeys === "all" ? false : selectedKeys.size === 0}
                         onPress={() => handleLogin(members)}
                       >
                         로그인

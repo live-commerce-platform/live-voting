@@ -1,9 +1,13 @@
-import { Spinner } from "@heroui/react";
-
 export function SuspenseLoader() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-      <Spinner size="lg" />
+    <div className="space-y-6">
+      {/* Select 스켈레톤 */}
+      <div className="w-full">
+        <div className="w-full h-[56px] bg-gray-200 rounded-xl animate-pulse"></div>
+      </div>
+
+      {/* Button 스켈레톤 */}
+      <div className="w-full h-[40px] bg-gray-200 rounded-xl animate-pulse"></div>
     </div>
   );
 }
