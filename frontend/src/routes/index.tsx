@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Suspense, ErrorBoundary } from "@suspensive/react";
 import { SuspenseQuery } from "@suspensive/react-query";
 import { fetchMembers } from "@/features/auth/api/members.api";
-import { useAuth } from "@/features/auth/hooks/useAuth";
+import { useAuthStore } from "@/features/auth/stores/authStore";
 import { SuspenseLoader } from "@/components/fallbacks/SuspenseLoader";
 import { ErrorFallback } from "@/components/fallbacks/ErrorFallback";
 import type { Member } from "@/features/auth/types/member.types";
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const login = useAuthStore((state) => state.login);
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 

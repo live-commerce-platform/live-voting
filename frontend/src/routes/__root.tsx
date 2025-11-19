@@ -3,21 +3,19 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-import { AuthProvider } from '../features/auth/context/AuthContext'
 
 import type { QueryClient } from '@tanstack/react-query'
 
 interface MyRouterContext {
   queryClient: QueryClient
+  auth: {
+    isAuthenticated: boolean
+  }
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: RootComponent,
-})
-
-function RootComponent() {
-  return (
-    <AuthProvider>
+  component: () => (
+    <>
       <Outlet />
       <TanStackDevtools
         config={{
@@ -31,6 +29,6 @@ function RootComponent() {
           TanStackQueryDevtools,
         ]}
       />
-    </AuthProvider>
-  )
-}
+    </>
+  ),
+})
