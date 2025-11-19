@@ -46,3 +46,12 @@ export interface VoteRecord {
   votedAt: string
   updatedAt?: string
 }
+
+// WebSocket 이벤트 타입
+export interface VoteCreatedEvent {
+  id: string
+  title: string
+  author: string
+  authorId: string
+  createdAt: string
+}

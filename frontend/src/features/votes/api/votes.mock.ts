@@ -3,10 +3,13 @@ import type {
   CreateVoteRequest,
   Vote,
   VoteDetail,
+  VoteCandidate,
   SubmitVoteRequest,
   VoteRecord,
+  VoteCreatedEvent,
 } from "../types/vote.types";
 import { mockMembers } from "@/features/auth/api/members.mock";
+import { emitVoteCreatedEvent } from "@/mocks/websocket.mock";
 
 // Mock 투표 기록 저장소
 let mockVoteRecords: VoteRecord[] = [];
@@ -102,6 +105,13 @@ export const voteHandlers = [
     const author =
       mockMembers.find((m) => m.id === body.authorId)?.name || "알 수 없음";
 
+    // 후보자 배열 생성 (각 후보자에 ID 할당 및 초기 투표수 0)
+    const candidates: VoteCandidate[] = body.candidates.map((name, index) => ({
+      id: String(index + 1),
+      name,
+      voteCount: 0,
+    }));
+
     const newVote: Vote = {
       id: String(mockVotes.length + 1),
       title: body.title,
@@ -109,9 +119,23 @@ export const voteHandlers = [
       author,
       authorId: body.authorId,
       createdAt: new Date().toISOString(),
+      candidates, // 후보자 배열 포함
+      totalVotes: 0, // 총 투표수 초기화
     };
 
     mockVotes = [newVote, ...mockVotes];
+
+    // WebSocket 이벤트 발행 (500ms 후 실시간 이벤트 시뮬레이션)
+    setTimeout(() => {
+      const voteCreatedEvent: VoteCreatedEvent = {
+        id: newVote.id,
+        title: newVote.title,
+        author: newVote.author,
+        authorId: newVote.authorId,
+        createdAt: newVote.createdAt,
+      };
+      emitVoteCreatedEvent(voteCreatedEvent);
+    }, 500);
 
     return HttpResponse.json(newVote, { status: 201 });
   }),
