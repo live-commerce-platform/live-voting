@@ -9,6 +9,7 @@ let mockVotes: Vote[] = [
     title: '점심 메뉴 선택',
     status: 'OPEN',
     author: '김철수',
+    authorId: '1',
     createdAt: '2025-01-15T09:00:00Z',
   },
   {
@@ -16,6 +17,7 @@ let mockVotes: Vote[] = [
     title: '회의 시간 투표',
     status: 'OPEN',
     author: '이영희',
+    authorId: '2',
     createdAt: '2025-01-14T14:30:00Z',
   },
   {
@@ -23,6 +25,7 @@ let mockVotes: Vote[] = [
     title: '팀 빌딩 장소',
     status: 'CLOSED',
     author: '박민수',
+    authorId: '3',
     createdAt: '2025-01-10T10:00:00Z',
     closedAt: '2025-01-12T18:00:00Z',
   },
@@ -31,6 +34,7 @@ let mockVotes: Vote[] = [
     title: '프로젝트 우선순위',
     status: 'CLOSED',
     author: '최지원',
+    authorId: '4',
     createdAt: '2025-01-08T11:00:00Z',
     closedAt: '2025-01-09T17:00:00Z',
   },
@@ -54,6 +58,7 @@ export const voteHandlers = [
       title: body.title,
       status: 'OPEN',
       author,
+      authorId: body.authorId,
       createdAt: new Date().toISOString(),
     }
 

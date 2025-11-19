@@ -14,6 +14,7 @@ import type { Vote } from "../types/vote.types";
 import { VoteStatusBadge } from "./VoteStatusBadge";
 import { useCloseVote } from "../hooks/useCloseVote";
 import { ButtonLink } from "@/components/ButtonLink";
+import { useAuthStore } from "@/features/auth/stores/authStore";
 
 interface VoteTableProps {
   data?: Vote[];
@@ -30,6 +31,7 @@ const columns = [
 export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
   const navigate = useNavigate();
   const closeVoteMutation = useCloseVote();
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   const handleRowClick = (vote: Vote) => {
     if (vote.status === "OPEN") {
@@ -58,7 +60,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
       case "actions":
         return (
           <div onClick={(e) => e.stopPropagation()}>
-            {vote.status === "OPEN" && (
+            {vote.status === "OPEN" && vote.authorId === currentUser?.id && (
               <Button
                 variant="flat"
                 color="danger"

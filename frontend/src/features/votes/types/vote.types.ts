@@ -5,6 +5,7 @@ export interface Vote {
   title: string
   status: VoteStatus
   author: string
+  authorId: string
   createdAt: string
   closedAt?: string
 }

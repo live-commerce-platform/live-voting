@@ -25,6 +25,7 @@ export const useCreateVote = () => {
           title: newVote.title,
           status: 'OPEN',
           author: currentUser.name,
+          authorId: currentUser.id,
           createdAt: new Date().toISOString(),
         }
 
