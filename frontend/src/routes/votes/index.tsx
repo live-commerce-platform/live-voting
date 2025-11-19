@@ -10,7 +10,7 @@ function VotesPage() {
   const { data, isLoading } = useVotes();
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">투표 목록</h1>

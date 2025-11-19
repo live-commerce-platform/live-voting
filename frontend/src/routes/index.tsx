@@ -29,12 +29,13 @@ function LoginPage() {
 
   const handleLogin = () => {
     if (!selectedMember) return;
+
     login(selectedMember);
     navigate({ to: "/votes" });
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="flex items-center justify-center min-h-[80vh]">
           <div className="w-full max-w-md space-y-8">
@@ -58,11 +59,11 @@ function LoginPage() {
                         label="멤버 선택"
                         placeholder="멤버를 선택하세요"
                         selectedKeys={selectedKeys}
-                        onSelectionChange={(keys) => handleSelectionChange(keys, members)}
+                        onSelectionChange={(keys) =>
+                          handleSelectionChange(keys, members)
+                        }
                         className="w-full"
                         size="lg"
-                        variant="bordered"
-                        color="primary"
                       >
                         {members.map((member) => (
                           <SelectItem key={member.id}>{member.name}</SelectItem>
