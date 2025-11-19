@@ -1,7 +1,7 @@
 import { Button } from "@heroui/react";
 import type { ErrorBoundaryFallbackProps } from "@suspensive/react";
 
-export function ErrorFallback({ reset }: ErrorBoundaryFallbackProps) {
+export function LoginErrorFallback({ reset }: ErrorBoundaryFallbackProps) {
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
       <div className="text-center space-y-4">

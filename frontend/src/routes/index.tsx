@@ -6,8 +6,8 @@ import { Suspense, ErrorBoundary } from "@suspensive/react";
 import { SuspenseQuery } from "@suspensive/react-query";
 import { fetchMembers } from "@/features/auth/api/members.api";
 import { useAuthStore } from "@/features/auth/stores/authStore";
-import { SuspenseLoader } from "@/components/fallbacks/SuspenseLoader";
-import { ErrorFallback } from "@/components/fallbacks/ErrorFallback";
+import { LoginSuspenseLoader } from "@/features/auth/components/LoginSuspenseLoader";
+import { LoginErrorFallback } from "@/features/auth/components/LoginErrorFallback";
 import type { Member } from "@/features/auth/types/member.types";
 
 export const Route = createFileRoute("/")({
@@ -50,8 +50,8 @@ function LoginPage() {
             </div>
 
             {/* 로그인 폼 - members 데이터 필요 */}
-            <ErrorBoundary fallback={ErrorFallback}>
-              <Suspense fallback={<SuspenseLoader />}>
+            <ErrorBoundary fallback={LoginErrorFallback}>
+              <Suspense fallback={<LoginSuspenseLoader />}>
                 <SuspenseQuery queryKey={["members"]} queryFn={fetchMembers}>
                   {({ data: members }) => (
                     <div className="space-y-6">

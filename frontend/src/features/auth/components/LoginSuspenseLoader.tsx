@@ -1,4 +1,4 @@
-export function SuspenseLoader() {
+export function LoginSuspenseLoader() {
   return (
     <div className="space-y-6">
       {/* Select 스켈레톤 */}
