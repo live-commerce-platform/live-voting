@@ -2,10 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { createVote } from '../api/votes.api'
 import type { CreateVoteRequest, Vote } from '../types/vote.types'
+import { useAuthStore } from '@/features/auth/stores/authStore'
 
 export const useCreateVote = () => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const currentUser = useAuthStore((state) => state.currentUser)
 
   return useMutation({
     mutationFn: createVote,
@@ -17,12 +19,12 @@ export const useCreateVote = () => {
       const previousVotes = queryClient.getQueryData<Vote[]>(['votes'])
 
       // Optimistic Update
-      if (previousVotes) {
+      if (previousVotes && currentUser) {
         const optimisticVote: Vote = {
           id: 'temp-' + Date.now(),
           title: newVote.title,
           status: 'OPEN',
-          author: '현재 사용자',
+          author: currentUser.name,
           createdAt: new Date().toISOString(),
         }
 

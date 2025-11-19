@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import type { Member } from '../types/member.types'
 
 // Mock 멤버 데이터
-const mockMembers: Member[] = [
+export const mockMembers: Member[] = [
   {
     id: '1',
     name: '김철수',

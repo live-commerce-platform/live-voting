@@ -1,18 +1,20 @@
 import { Button, Form, Input } from "@heroui/react";
 import { useState } from "react";
 import { useCreateVote } from "../hooks/useCreateVote";
-import { Plus } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
+import { useAuthStore } from "@/features/auth/stores/authStore";
 
 export const VoteForm = () => {
   const [title, setTitle] = useState("");
   const [candidates, setCandidates] = useState(["", ""]);
   const [errors, setErrors] = useState<{
-    title?: string
-    candidates?: string
-    candidateErrors?: Record<number, string>
+    title?: string;
+    candidates?: string;
+    candidateErrors?: Record<number, string>;
   }>({});
 
   const { mutate: createVote, isPending } = useCreateVote();
+  const currentUser = useAuthStore((state) => state.currentUser);
 
   const handleAddCandidate = () => {
     setCandidates([...candidates, ""]);
@@ -31,49 +33,51 @@ export const VoteForm = () => {
 
   const validateForm = (): boolean => {
     const newErrors: {
-      title?: string
-      candidates?: string
-      candidateErrors?: Record<number, string>
-    } = {}
+      title?: string;
+      candidates?: string;
+      candidateErrors?: Record<number, string>;
+    } = {};
 
     // 투표명 검증
     if (!title.trim()) {
-      newErrors.title = "투표명을 입력해주세요"
+      newErrors.title = "투표명을 입력해주세요";
     }
 
     // 후보 개별 검증
-    const candidateErrors: Record<number, string> = {}
+    const candidateErrors: Record<number, string> = {};
     candidates.forEach((candidate, index) => {
       if (!candidate.trim()) {
-        candidateErrors[index] = "후보를 입력해주세요"
+        candidateErrors[index] = "후보를 입력해주세요";
       }
-    })
+    });
 
     // 유효한 후보 개수 검증
-    const validCandidates = candidates.filter((c) => c.trim())
+    const validCandidates = candidates.filter((c) => c.trim());
     if (validCandidates.length < 2) {
-      newErrors.candidates = "최소 2개 이상의 후보를 입력해주세요"
+      newErrors.candidates = "최소 2개 이상의 후보를 입력해주세요";
     }
 
     // 개별 후보 에러가 있으면 추가
     if (Object.keys(candidateErrors).length > 0) {
-      newErrors.candidateErrors = candidateErrors
+      newErrors.candidateErrors = candidateErrors;
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
+    if (!currentUser) return;
 
     const validCandidates = candidates.filter((c) => c.trim());
 
     createVote({
       title: title.trim(),
       candidates: validCandidates,
+      authorId: currentUser.id,
     });
   };
 
@@ -85,9 +89,10 @@ export const VoteForm = () => {
     <Form
       validationErrors={
         Object.fromEntries(
-          Object.entries({ title: errors.title, candidates: errors.candidates }).filter(
-            ([_, v]) => v !== undefined
-          )
+          Object.entries({
+            title: errors.title,
+            candidates: errors.candidates,
+          }).filter(([_, v]) => v !== undefined)
         ) as Record<string, string>
       }
       validationBehavior="aria"
@@ -142,8 +147,9 @@ export const VoteForm = () => {
               onPress={() => handleRemoveCandidate(index)}
               isDisabled={candidates.length <= 2}
               size="lg"
+              isIconOnly
             >
-              삭제
+              <Trash className="size-5" />
             </Button>
           </div>
         ))}
@@ -169,17 +175,10 @@ export const VoteForm = () => {
           onPress={handleCancel}
           isDisabled={isPending}
           size="lg"
-          className="px-8"
         >
           취소
         </Button>
-        <Button
-          type="submit"
-          color="primary"
-          isLoading={isPending}
-          size="lg"
-          className="px-8"
-        >
+        <Button type="submit" color="primary" isLoading={isPending} size="lg">
           저장
         </Button>
       </div>

@@ -1,5 +1,6 @@
 import { http, HttpResponse } from 'msw'
 import type { CreateVoteRequest, Vote } from '../types/vote.types'
+import { mockMembers } from '@/features/auth/api/members.mock'
 
 // Mock 데이터
 let mockVotes: Vote[] = [
@@ -45,11 +46,14 @@ export const voteHandlers = [
   http.post('/api/votes', async ({ request }) => {
     const body = (await request.json()) as CreateVoteRequest
 
+    // authorId로 작성자 이름 조회
+    const author = mockMembers.find((m) => m.id === body.authorId)?.name || '알 수 없음'
+
     const newVote: Vote = {
       id: String(mockVotes.length + 1),
       title: body.title,
       status: 'OPEN',
-      author: '현재 사용자', // TODO: 실제 인증된 사용자로 대체
+      author,
       createdAt: new Date().toISOString(),
     }
 

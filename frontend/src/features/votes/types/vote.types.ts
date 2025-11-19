@@ -16,4 +16,5 @@ export interface CloseVoteRequest {
 export interface CreateVoteRequest {
   title: string
   candidates: string[]
+  authorId: string
 }
