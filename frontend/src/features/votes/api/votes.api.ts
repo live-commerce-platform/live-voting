@@ -1,4 +1,4 @@
-import type { CreateVoteRequest, Vote, VoteDetail } from '../types/vote.types'
+import type { CreateVoteRequest, Vote, VoteDetail, SubmitVoteRequest, VoteRecord } from '../types/vote.types'
 
 const API_BASE_URL = '/api/votes'
 
@@ -45,6 +45,32 @@ export const fetchVoteDetail = async (id: string): Promise<VoteDetail> => {
 
   if (!response.ok) {
     throw new Error('Failed to fetch vote detail')
+  }
+
+  return response.json()
+}
+
+export const submitVote = async (data: SubmitVoteRequest): Promise<VoteRecord> => {
+  const response = await fetch(`${API_BASE_URL}/${data.voteId}/submit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to submit vote')
+  }
+
+  return response.json()
+}
+
+export const fetchVoteRecord = async (voteId: string, voterId: string): Promise<VoteRecord | null> => {
+  const response = await fetch(`${API_BASE_URL}/${voteId}/vote-record?voterId=${voterId}`)
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch vote record')
   }
 
   return response.json()

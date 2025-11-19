@@ -55,10 +55,20 @@ function VoteResultPage() {
                   </div>
 
                   {/* 하단 액션 */}
-                  <div className="flex justify-center">
+                  <div className="flex gap-3 justify-center">
                     <ButtonLink to="/votes" variant="flat" size="lg">
-                      목록으로 돌아가기
+                      목록으로
                     </ButtonLink>
+                    {data.status === 'OPEN' && (
+                      <ButtonLink
+                        to="/votes/$id/voting"
+                        params={{ id }}
+                        color="primary"
+                        size="lg"
+                      >
+                        투표하기
+                      </ButtonLink>
+                    )}
                   </div>
                 </div>
               </div>

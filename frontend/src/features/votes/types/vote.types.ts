@@ -32,3 +32,17 @@ export interface VoteDetail extends Vote {
   candidates: VoteCandidate[]
   totalVotes: number
 }
+
+export interface SubmitVoteRequest {
+  voteId: string
+  candidateId: string
+  voterId: string
+}
+
+export interface VoteRecord {
+  voteId: string
+  candidateId: string
+  voterId: string
+  votedAt: string
+  updatedAt?: string
+}
