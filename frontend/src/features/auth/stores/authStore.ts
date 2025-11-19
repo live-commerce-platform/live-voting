@@ -14,6 +14,3 @@ export const useAuthStore = create<AuthStore>()((set) => ({
   login: (user) => set({ currentUser: user, isAuthenticated: true }),
   logout: () => set({ currentUser: null, isAuthenticated: false }),
 }));
-
-// beforeLoad에서 사용할 getter 함수
-export const getAuthState = () => useAuthStore.getState();

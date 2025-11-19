@@ -1,9 +1,9 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { getAuthState } from "@/features/auth/stores/authStore";
+import { useAuthStore } from "@/features/auth/stores/authStore";
 
 export const Route = createFileRoute("/votes")({
   beforeLoad: () => {
-    const { isAuthenticated } = getAuthState();
+    const { isAuthenticated } = useAuthStore.getState();
     if (!isAuthenticated) {
       throw redirect({ to: "/" });
     }
