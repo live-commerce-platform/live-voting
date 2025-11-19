@@ -89,7 +89,7 @@ VITE_WS_URL=http://localhost:8080/ws
 
 | 변수명              | 타입      | 기본값                       | 설명                                          |
 | ------------------- | --------- | ---------------------------- | --------------------------------------------- |
-| `VITE_ENABLE_MSW`   | `string`  | `"true"`                     | MSW Mock API 활성화 여부 (`"true"`/`"false"`) |
+| `VITE_ENABLE_MSW`   | `string`  | `"false"`                    | MSW Mock API 활성화 여부 (`"true"`/`"false"`) |
 | `VITE_API_BASE_URL` | `string?` | `"http://localhost:8080"`    | 백엔드 API 서버 베이스 URL                    |
 | `VITE_WS_URL`       | `string`  | `"http://localhost:8080/ws"` | WebSocket 서버 URL                            |
 

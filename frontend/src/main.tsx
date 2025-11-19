@@ -17,8 +17,8 @@ async function enableMocking() {
     return
   }
 
-  // 환경 변수로 MSW 활성화 여부 확인 (기본값: true)
-  const isMswEnabled = import.meta.env.VITE_ENABLE_MSW !== 'false'
+  // 환경 변수로 MSW 활성화 여부 확인 (기본값: false)
+  const isMswEnabled = import.meta.env.VITE_ENABLE_MSW === 'true'
 
   if (!isMswEnabled) {
     console.info('🔌 MSW가 비활성화되었습니다. 실제 API를 사용합니다.')
