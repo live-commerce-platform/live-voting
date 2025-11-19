@@ -1,41 +1,48 @@
 import { Button, Form, Input } from "@heroui/react";
 import { Check, Plus, Trash, X } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useAuthStore } from "@/features/auth/stores/authStore";
 import { useCreateVote } from "../hooks/useCreateVote";
 
+interface CandidateItem {
+	id: string;
+	value: string;
+}
+
 export const VoteForm = () => {
+	const candidatesListId = useId();
 	const [title, setTitle] = useState("");
-	const [candidates, setCandidates] = useState(["", ""]);
+	const [candidates, setCandidates] = useState<CandidateItem[]>([
+		{ id: crypto.randomUUID(), value: "" },
+		{ id: crypto.randomUUID(), value: "" },
+	]);
 	const [errors, setErrors] = useState<{
 		title?: string;
 		candidates?: string;
-		candidateErrors?: Record<number, string>;
+		candidateErrors?: Record<string, string>;
 	}>({});
 
 	const { mutate: createVote, isPending } = useCreateVote();
 	const currentUser = useAuthStore((state) => state.currentUser);
 
 	const handleAddCandidate = () => {
-		setCandidates([...candidates, ""]);
+		setCandidates([...candidates, { id: crypto.randomUUID(), value: "" }]);
 	};
 
-	const handleRemoveCandidate = (index: number) => {
+	const handleRemoveCandidate = (id: string) => {
 		if (candidates.length <= 2) return;
-		setCandidates(candidates.filter((_, i) => i !== index));
+		setCandidates(candidates.filter((c) => c.id !== id));
 	};
 
-	const handleCandidateChange = (index: number, value: string) => {
-		const newCandidates = [...candidates];
-		newCandidates[index] = value;
-		setCandidates(newCandidates);
+	const handleCandidateChange = (id: string, value: string) => {
+		setCandidates(candidates.map((c) => (c.id === id ? { ...c, value } : c)));
 	};
 
 	const validateForm = (): boolean => {
 		const newErrors: {
 			title?: string;
 			candidates?: string;
-			candidateErrors?: Record<number, string>;
+			candidateErrors?: Record<string, string>;
 		} = {};
 
 		// 투표명 검증
@@ -44,15 +51,15 @@ export const VoteForm = () => {
 		}
 
 		// 후보 개별 검증
-		const candidateErrors: Record<number, string> = {};
-		candidates.forEach((candidate, index) => {
-			if (!candidate.trim()) {
-				candidateErrors[index] = "후보를 입력해주세요";
+		const candidateErrors: Record<string, string> = {};
+		candidates.forEach((candidate) => {
+			if (!candidate.value.trim()) {
+				candidateErrors[candidate.id] = "후보를 입력해주세요";
 			}
 		});
 
 		// 유효한 후보 개수 검증
-		const validCandidates = candidates.filter((c) => c.trim());
+		const validCandidates = candidates.filter((c) => c.value.trim());
 		if (validCandidates.length < 2) {
 			newErrors.candidates = "최소 2개 이상의 후보를 입력해주세요";
 		}
@@ -72,7 +79,9 @@ export const VoteForm = () => {
 		if (!validateForm()) return;
 		if (!currentUser) return;
 
-		const validCandidates = candidates.filter((c) => c.trim());
+		const validCandidates = candidates
+			.filter((c) => c.value.trim())
+			.map((c) => c.value);
 
 		createVote({
 			title: title.trim(),
@@ -118,7 +127,10 @@ export const VoteForm = () => {
 			{/* 후보 입력 */}
 			<div className="flex flex-col w-full gap-3">
 				<div className="flex items-center justify-between">
-					<label className="text-gray-700 font-medium text-sm">
+					<label
+						htmlFor={candidatesListId}
+						className="text-gray-700 font-medium text-sm"
+					>
 						후보 <span className="text-danger">*</span>
 					</label>
 					{errors.candidates && (
@@ -126,33 +138,39 @@ export const VoteForm = () => {
 					)}
 				</div>
 
-				{candidates.map((candidate, index) => (
-					<div key={index} className="flex gap-2">
-						<Input
-							name={`candidate-${index}`}
-							placeholder={`후보 ${index + 1}`}
-							value={candidate}
-							onChange={(e) => handleCandidateChange(index, e.target.value)}
-							size="lg"
-							isInvalid={!!errors.candidateErrors?.[index]}
-							errorMessage={errors.candidateErrors?.[index]}
-							classNames={{
-								input: "text-gray-900 flex-1",
-							}}
-						/>
-						<Button
-							type="button"
-							color="danger"
-							variant="flat"
-							onPress={() => handleRemoveCandidate(index)}
-							isDisabled={candidates.length <= 2}
-							size="lg"
-							isIconOnly
-						>
-							<Trash className="size-5" />
-						</Button>
-					</div>
-				))}
+				<fieldset id={candidatesListId} className="border-none p-0 m-0">
+					<legend className="sr-only">투표 후보 목록</legend>
+					{candidates.map((candidate, index) => (
+						<div key={candidate.id} className="flex gap-2 mb-3 last:mb-0">
+							<Input
+								name={`candidate-${candidate.id}`}
+								placeholder={`후보 ${index + 1}`}
+								value={candidate.value}
+								onChange={(e) =>
+									handleCandidateChange(candidate.id, e.target.value)
+								}
+								size="lg"
+								isInvalid={!!errors.candidateErrors?.[candidate.id]}
+								errorMessage={errors.candidateErrors?.[candidate.id]}
+								classNames={{
+									input: "text-gray-900 flex-1",
+								}}
+							/>
+							<Button
+								type="button"
+								color="danger"
+								variant="flat"
+								onPress={() => handleRemoveCandidate(candidate.id)}
+								isDisabled={candidates.length <= 2}
+								size="lg"
+								isIconOnly
+								aria-label={`후보 ${index + 1} 제거`}
+							>
+								<Trash className="size-5" />
+							</Button>
+						</div>
+					))}
+				</fieldset>
 
 				<Button
 					type="button"

@@ -7,6 +7,16 @@
 
 import type { VoteCreatedEvent } from "@/features/votes/types/vote.types";
 
+// 전역 Window 인터페이스 확장
+declare global {
+	interface Window {
+		__mockWebSocket?: {
+			emitVoteCreated: typeof emitVoteCreatedEvent;
+			startSimulation: typeof startMockWebSocketSimulation;
+		};
+	}
+}
+
 /**
  * 새로운 투표 생성 이벤트를 발행합니다.
  * 개발 환경에서만 동작하며, 실제 WebSocket 대신 브라우저 이벤트로 시뮬레이션합니다.
@@ -107,7 +117,7 @@ export function startMockWebSocketSimulation(intervalMs = 30000) {
 
 // 개발 환경에서 전역으로 노출 (브라우저 콘솔에서 테스트 가능)
 if (import.meta.env.DEV) {
-	(window as any).__mockWebSocket = {
+	window.__mockWebSocket = {
 		emitVoteCreated: emitVoteCreatedEvent,
 		startSimulation: startMockWebSocketSimulation,
 	};

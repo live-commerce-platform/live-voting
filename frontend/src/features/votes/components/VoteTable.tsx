@@ -59,7 +59,16 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
 				return <VoteStatusBadge status={vote.status} />;
 			case "actions":
 				return (
-					<div onClick={(e) => e.stopPropagation()}>
+					<div
+						role="button"
+						tabIndex={0}
+						onClick={(e) => e.stopPropagation()}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" || e.key === " ") {
+								e.stopPropagation();
+							}
+						}}
+					>
 						{vote.status === "OPEN" && vote.authorId === currentUser?.id && (
 							<Button
 								variant="flat"
