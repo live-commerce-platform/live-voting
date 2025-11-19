@@ -4,7 +4,7 @@ import { RefreshCw } from "lucide-react";
 
 export function LoginErrorFallback({ reset }: ErrorBoundaryFallbackProps) {
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <div className="text-center space-y-4">
         <p className="text-red-600 text-lg font-semibold">
           오류가 발생했습니다
