@@ -4,7 +4,7 @@ import { emitVoteCreatedEvent } from "@/mocks/websocket.mock";
 import type {
 	CreateVoteRequest,
 	SubmitVoteRequest,
-	Vote,
+	VoteSummary,
 	VoteCandidate,
 	VoteCreatedEvent,
 	VoteDetail,
@@ -14,8 +14,15 @@ import type {
 // Mock 투표 기록 저장소
 const mockVoteRecords: VoteRecord[] = [];
 
-// Mock 데이터
-let mockVotes: Vote[] = [
+// VoteDetail을 VoteSummary로 변환하는 헬퍼 함수
+const toVoteSummary = (detail: VoteDetail): VoteSummary => {
+	// biome-ignore lint/correctness/noUnusedVariables: 구조 분해로 필드 제외
+	const { candidates, totalVotes, ...summary } = detail;
+	return summary;
+};
+
+// Mock 데이터 (VoteDetail 형태로 관리)
+let mockVotes: VoteDetail[] = [
 	{
 		id: "1",
 		title: "점심 메뉴 선택",
@@ -82,7 +89,8 @@ let mockVotes: Vote[] = [
 export const voteHandlers = [
 	// 투표 목록 조회
 	http.get("/api/votes", () => {
-		return HttpResponse.json(mockVotes);
+		const summaries = mockVotes.map(toVoteSummary);
+		return HttpResponse.json(summaries);
 	}),
 
 	// 투표 상세 조회
@@ -112,15 +120,15 @@ export const voteHandlers = [
 			voteCount: 0,
 		}));
 
-		const newVote: Vote = {
+		const newVote: VoteDetail = {
 			id: String(mockVotes.length + 1),
 			title: body.title,
 			status: "OPEN",
 			author,
 			authorId: body.authorId,
 			createdAt: new Date().toISOString(),
-			candidates, // 후보자 배열 포함
-			totalVotes: 0, // 총 투표수 초기화
+			candidates,
+			totalVotes: 0,
 		};
 
 		mockVotes = [newVote, ...mockVotes];
@@ -137,7 +145,8 @@ export const voteHandlers = [
 			emitVoteCreatedEvent(voteCreatedEvent);
 		}, 500);
 
-		return HttpResponse.json(newVote, { status: 201 });
+		// 목록용 Summary 반환
+		return HttpResponse.json(toVoteSummary(newVote), { status: 201 });
 	}),
 
 	// 투표 종료
@@ -149,7 +158,7 @@ export const voteHandlers = [
 			return new HttpResponse(null, { status: 404 });
 		}
 
-		const closedVote: Vote = {
+		const closedVote: VoteDetail = {
 			...mockVotes[voteIndex],
 			status: "CLOSED",
 			closedAt: new Date().toISOString(),
@@ -157,7 +166,8 @@ export const voteHandlers = [
 
 		mockVotes[voteIndex] = closedVote;
 
-		return HttpResponse.json(closedVote);
+		// 목록용 Summary 반환
+		return HttpResponse.json(toVoteSummary(closedVote));
 	}),
 
 	// 투표 제출

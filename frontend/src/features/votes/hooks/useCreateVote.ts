@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStore } from "@/features/auth/stores/authStore";
 import { createVote } from "../api/votes.api";
-import type { CreateVoteRequest, Vote } from "../types/vote.types";
+import type { CreateVoteRequest, VoteSummary } from "../types/vote.types";
 
 export const useCreateVote = () => {
 	const queryClient = useQueryClient();
@@ -16,11 +16,12 @@ export const useCreateVote = () => {
 			await queryClient.cancelQueries({ queryKey: ["votes"] });
 
 			// 이전 상태 저장
-			const previousVotes = queryClient.getQueryData<Vote[]>(["votes"]);
+			const previousVotes =
+				queryClient.getQueryData<VoteSummary[]>(["votes"]);
 
 			// Optimistic Update
 			if (previousVotes && currentUser) {
-				const optimisticVote: Vote = {
+				const optimisticVote: VoteSummary = {
 					id: `temp-${Date.now()}`,
 					title: newVote.title,
 					status: "OPEN",
@@ -29,7 +30,7 @@ export const useCreateVote = () => {
 					createdAt: new Date().toISOString(),
 				};
 
-				queryClient.setQueryData<Vote[]>(
+				queryClient.setQueryData<VoteSummary[]>(
 					["votes"],
 					[optimisticVote, ...previousVotes],
 				);

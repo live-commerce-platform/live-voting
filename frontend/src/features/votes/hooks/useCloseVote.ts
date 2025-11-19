@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { closeVote } from "../api/votes.api";
-import type { Vote } from "../types/vote.types";
+import type { VoteSummary } from "../types/vote.types";
 
 export const useCloseVote = () => {
 	const queryClient = useQueryClient();
@@ -12,11 +12,12 @@ export const useCloseVote = () => {
 			await queryClient.cancelQueries({ queryKey: ["votes"] });
 
 			// 이전 상태 저장
-			const previousVotes = queryClient.getQueryData<Vote[]>(["votes"]);
+			const previousVotes =
+				queryClient.getQueryData<VoteSummary[]>(["votes"]);
 
 			// Optimistic Update
 			if (previousVotes) {
-				queryClient.setQueryData<Vote[]>(
+				queryClient.setQueryData<VoteSummary[]>(
 					["votes"],
 					previousVotes.map((vote) =>
 						vote.id === voteId

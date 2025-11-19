@@ -13,11 +13,11 @@ import { PlusCircle, XCircle } from "lucide-react";
 import { ButtonLink } from "@/components/ButtonLink";
 import { useAuthStore } from "@/features/auth/stores/authStore";
 import { useCloseVote } from "../hooks/useCloseVote";
-import type { Vote } from "../types/vote.types";
+import type { VoteSummary } from "../types/vote.types";
 import { VoteStatusBadge } from "./VoteStatusBadge";
 
 interface VoteTableProps {
-	data?: Vote[];
+	data?: VoteSummary[];
 	isLoading: boolean;
 }
 
@@ -33,7 +33,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
 	const closeVoteMutation = useCloseVote();
 	const currentUser = useAuthStore((state) => state.currentUser);
 
-	const handleRowClick = (vote: Vote) => {
+	const handleRowClick = (vote: VoteSummary) => {
 		if (vote.status === "OPEN") {
 			navigate({ to: `/votes/$id/voting`, params: { id: vote.id } });
 		} else {
@@ -45,7 +45,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
 		closeVoteMutation.mutate(voteId);
 	};
 
-	const renderCell = (vote: Vote, columnKey: React.Key) => {
+	const renderCell = (vote: VoteSummary, columnKey: React.Key) => {
 		switch (columnKey) {
 			case "title":
 				return (
