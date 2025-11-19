@@ -8,9 +8,6 @@ import type { QueryClient } from '@tanstack/react-query'
 
 interface MyRouterContext {
   queryClient: QueryClient
-  auth: {
-    isAuthenticated: boolean
-  }
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({

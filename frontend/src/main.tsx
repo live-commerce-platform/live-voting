@@ -10,7 +10,6 @@ import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 import reportWebVitals from "./reportWebVitals.ts";
 import { HeroUIProvider } from "@heroui/system";
-import { getAuthState } from "./features/auth/stores/authStore";
 
 // Enable MSW in development mode
 async function enableMocking() {
@@ -32,9 +31,6 @@ const router = createRouter({
   routeTree,
   context: {
     ...TanStackQueryProviderContext,
-    get auth() {
-      return { isAuthenticated: getAuthState().isAuthenticated };
-    },
   },
   defaultPreload: "intent",
   scrollRestoration: true,
