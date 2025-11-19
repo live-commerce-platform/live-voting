@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSubmitVote } from "../hooks/useSubmitVote";
 import type { VoteDetail, VoteRecord } from "../types/vote.types";
 import { ButtonLink } from "@/components/ButtonLink";
+import { VoteStatusBadge } from "./VoteStatusBadge";
 
 interface VotingFormProps {
   vote: VoteDetail;
@@ -46,10 +47,11 @@ export function VotingForm({
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         <div className="space-y-8">
           {/* 투표 제목 */}
-          <div className="text-center">
+          <div className="text-center space-y-2">
+            <VoteStatusBadge status={vote.status} />
             <h1 className="text-3xl font-bold text-gray-900">{vote.title}</h1>
             {existingRecord && (
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="text-sm text-gray-600">
                 이전에 투표한 내용이 선택되어 있습니다. 변경할 수 있습니다.
               </p>
             )}

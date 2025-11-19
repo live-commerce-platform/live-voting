@@ -97,7 +97,7 @@ export const VoteForm = () => {
       }
       validationBehavior="aria"
       onSubmit={handleSubmit}
-      className="max-w-xl flex flex-col gap-4"
+      className="flex flex-col gap-8"
     >
       {/* 투표명 입력 */}
       <Input
@@ -168,7 +168,7 @@ export const VoteForm = () => {
       </div>
 
       {/* 버튼 그룹 */}
-      <div className="flex gap-3 pt-2 justify-end">
+      <div className="flex gap-3 justify-center w-full">
         <Button
           type="button"
           variant="flat"
