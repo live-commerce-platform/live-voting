@@ -1,77 +1,36 @@
+import { apiClient } from '@/shared/lib/api'
 import type { CreateVoteRequest, Vote, VoteDetail, SubmitVoteRequest, VoteRecord } from '../types/vote.types'
 
-const API_BASE_URL = '/api/votes'
-
+// 투표 목록 조회
 export const fetchVotes = async (): Promise<Vote[]> => {
-  const response = await fetch(API_BASE_URL)
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch votes')
-  }
-
-  return response.json()
+  return apiClient.get('api/votes').json<Vote[]>()
 }
 
+// 투표 생성
 export const createVote = async (data: CreateVoteRequest): Promise<Vote> => {
-  const response = await fetch(API_BASE_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to create vote')
-  }
-
-  return response.json()
+  return apiClient.post('api/votes', { json: data }).json<Vote>()
 }
 
+// 투표 종료
 export const closeVote = async (id: string): Promise<Vote> => {
-  const response = await fetch(`${API_BASE_URL}/${id}/close`, {
-    method: 'PATCH',
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to close vote')
-  }
-
-  return response.json()
+  return apiClient.patch(`api/votes/${id}/close`).json<Vote>()
 }
 
+// 투표 상세 조회
 export const fetchVoteDetail = async (id: string): Promise<VoteDetail> => {
-  const response = await fetch(`${API_BASE_URL}/${id}`)
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch vote detail')
-  }
-
-  return response.json()
+  return apiClient.get(`api/votes/${id}`).json<VoteDetail>()
 }
 
+// 투표 제출
 export const submitVote = async (data: SubmitVoteRequest): Promise<VoteRecord> => {
-  const response = await fetch(`${API_BASE_URL}/${data.voteId}/submit`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-    throw new Error('Failed to submit vote')
-  }
-
-  return response.json()
+  return apiClient.post(`api/votes/${data.voteId}/submit`, { json: data }).json<VoteRecord>()
 }
 
+// 투표 기록 조회
 export const fetchVoteRecord = async (voteId: string, voterId: string): Promise<VoteRecord | null> => {
-  const response = await fetch(`${API_BASE_URL}/${voteId}/vote-record?voterId=${voterId}`)
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch vote record')
-  }
-
-  return response.json()
+  return apiClient
+    .get(`api/votes/${voteId}/vote-record`, {
+      searchParams: { voterId },
+    })
+    .json<VoteRecord | null>()
 }
