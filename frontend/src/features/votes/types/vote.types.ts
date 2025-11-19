@@ -8,6 +8,8 @@ export interface Vote {
   authorId: string
   createdAt: string
   closedAt?: string
+  candidates?: VoteCandidate[]
+  totalVotes?: number
 }
 
 export interface CloseVoteRequest {
@@ -18,4 +20,15 @@ export interface CreateVoteRequest {
   title: string
   candidates: string[]
   authorId: string
+}
+
+export interface VoteCandidate {
+  id: string
+  name: string
+  voteCount: number
+}
+
+export interface VoteDetail extends Vote {
+  candidates: VoteCandidate[]
+  totalVotes: number
 }

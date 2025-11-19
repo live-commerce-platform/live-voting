@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { CreateVoteRequest, Vote } from '../types/vote.types'
+import type { CreateVoteRequest, Vote, VoteDetail } from '../types/vote.types'
 import { mockMembers } from '@/features/auth/api/members.mock'
 
 // Mock 데이터
@@ -28,6 +28,13 @@ let mockVotes: Vote[] = [
     authorId: '3',
     createdAt: '2025-01-10T10:00:00Z',
     closedAt: '2025-01-12T18:00:00Z',
+    candidates: [
+      { id: '1', name: '제주도', voteCount: 28 },
+      { id: '2', name: '강릉', voteCount: 25 },
+      { id: '3', name: '부산', voteCount: 18 },
+      { id: '4', name: '경주', voteCount: 9 },
+    ],
+    totalVotes: 80,
   },
   {
     id: '4',
@@ -37,6 +44,13 @@ let mockVotes: Vote[] = [
     authorId: '4',
     createdAt: '2025-01-08T11:00:00Z',
     closedAt: '2025-01-09T17:00:00Z',
+    candidates: [
+      { id: '1', name: '사용자 인증 개선', voteCount: 45 },
+      { id: '2', name: '대시보드 UI 개선', voteCount: 32 },
+      { id: '3', name: '성능 최적화', voteCount: 28 },
+      { id: '4', name: '모바일 앱 개발', voteCount: 15 },
+    ],
+    totalVotes: 120,
   },
 ]
 
@@ -44,6 +58,18 @@ export const voteHandlers = [
   // 투표 목록 조회
   http.get('/api/votes', () => {
     return HttpResponse.json(mockVotes)
+  }),
+
+  // 투표 상세 조회
+  http.get('/api/votes/:id', ({ params }) => {
+    const { id } = params
+    const vote = mockVotes.find((v) => v.id === id)
+
+    if (!vote) {
+      return new HttpResponse(null, { status: 404 })
+    }
+
+    return HttpResponse.json(vote as VoteDetail)
   }),
 
   // 투표 생성
