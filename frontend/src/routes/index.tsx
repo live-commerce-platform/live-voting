@@ -18,18 +18,19 @@ function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
 
-  const handleLogin = (members: Member[]) => {
-    const selectedMemberId = Array.from(selectedKeys)[0] as string;
-    if (!selectedMemberId) return;
+  const handleSelectionChange = (keys: Selection, members: Member[]) => {
+    setSelectedKeys(keys);
+    const memberId = Array.from(keys)[0] as string;
+    const member = members.find((m) => m.id === memberId);
+    setSelectedMember(member || null);
+  };
 
-    const selectedMember = members.find(
-      (member) => member.id === selectedMemberId
-    );
-    if (selectedMember) {
-      login(selectedMember);
-      navigate({ to: "/votes" });
-    }
+  const handleLogin = () => {
+    if (!selectedMember) return;
+    login(selectedMember);
+    navigate({ to: "/votes" });
   };
 
   return (
@@ -57,7 +58,7 @@ function LoginPage() {
                         label="멤버 선택"
                         placeholder="멤버를 선택하세요"
                         selectedKeys={selectedKeys}
-                        onSelectionChange={setSelectedKeys}
+                        onSelectionChange={(keys) => handleSelectionChange(keys, members)}
                         className="w-full"
                         size="lg"
                         variant="bordered"
@@ -72,8 +73,8 @@ function LoginPage() {
                         color="primary"
                         size="lg"
                         className="w-full"
-                        isDisabled={selectedKeys === "all" ? false : selectedKeys.size === 0}
-                        onPress={() => handleLogin(members)}
+                        isDisabled={!selectedMember}
+                        onPress={handleLogin}
                       >
                         로그인
                       </Button>
