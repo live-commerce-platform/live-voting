@@ -1,5 +1,6 @@
 import { addToast } from "@heroui/react";
 import { Button } from "@heroui/react";
+import { CheckSquareIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 /**
@@ -18,13 +19,12 @@ export function showVoteNotification(
   onAction: () => void
 ) {
   return addToast({
-    title: `${title}`,
+    title,
     description,
-    color: "primary",
-    variant: "flat",
     timeout: 5000,
     endContent: (
       <Button size="sm" variant="flat" color="primary" onPress={onAction}>
+        <CheckSquareIcon size={18} />
         투표하기
       </Button>
     ),

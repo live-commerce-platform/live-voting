@@ -18,7 +18,7 @@ function VotesPage() {
   // 새로운 투표 생성 이벤트 핸들러
   const handleVoteCreated = (vote: VoteCreatedEvent) => {
     // HeroUI Toast 알림 표시
-    showVoteNotification("새로운 투표가 생성되었습니다!", vote.title, () => {
+    showVoteNotification("새로운 투표가 생성되었습니다", vote.title, () => {
       navigate({
         to: "/votes/$id/voting",
         params: { id: vote.id },
