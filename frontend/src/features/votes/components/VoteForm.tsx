@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "@heroui/react";
 import { useState } from "react";
 import { useCreateVote } from "../hooks/useCreateVote";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, X, Check } from "lucide-react";
 import { useAuthStore } from "@/features/auth/stores/authStore";
 
 export const VoteForm = () => {
@@ -175,10 +175,17 @@ export const VoteForm = () => {
           onPress={handleCancel}
           isDisabled={isPending}
           size="lg"
+          startContent={<X size={18} />}
         >
           취소
         </Button>
-        <Button type="submit" color="primary" isLoading={isPending} size="lg">
+        <Button
+          type="submit"
+          color="primary"
+          isLoading={isPending}
+          size="lg"
+          startContent={<Check size={18} />}
+        >
           저장
         </Button>
       </div>

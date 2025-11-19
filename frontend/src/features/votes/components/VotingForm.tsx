@@ -4,6 +4,7 @@ import { useSubmitVote } from "../hooks/useSubmitVote";
 import type { VoteDetail, VoteRecord } from "../types/vote.types";
 import { ButtonLink } from "@/components/ButtonLink";
 import { VoteStatusBadge } from "./VoteStatusBadge";
+import { CheckSquare, List, BarChart3 } from "lucide-react";
 
 interface VotingFormProps {
   vote: VoteDetail;
@@ -100,6 +101,7 @@ export function VotingForm({
               }
               size="lg"
               className="w-full"
+              startContent={<CheckSquare size={18} />}
             >
               {buttonText}
             </Button>
@@ -107,7 +109,12 @@ export function VotingForm({
 
           {/* 네비게이션 버튼 */}
           <div className="flex gap-3 justify-center">
-            <ButtonLink to="/votes" variant="flat" size="lg">
+            <ButtonLink
+              to="/votes"
+              variant="flat"
+              size="lg"
+              startContent={<List size={18} />}
+            >
               목록으로
             </ButtonLink>
             <ButtonLink
@@ -115,6 +122,7 @@ export function VotingForm({
               params={{ id: vote.id }}
               size="lg"
               color="success"
+              startContent={<BarChart3 size={18} />}
             >
               결과보기
             </ButtonLink>

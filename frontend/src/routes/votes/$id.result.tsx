@@ -7,6 +7,7 @@ import { VoteResultItem } from "@/features/votes/components/VoteResultItem";
 import { VoteResultLoader } from "@/features/votes/components/VoteResultLoader";
 import { VoteResultErrorFallback } from "@/features/votes/components/VoteResultErrorFallback";
 import { ButtonLink } from "@/components/ButtonLink";
+import { List, CheckSquare } from "lucide-react";
 
 export const Route = createFileRoute("/votes/$id/result")({
   component: VoteResultPage,
@@ -57,7 +58,12 @@ function VoteResultPage() {
 
                     {/* 하단 액션 */}
                     <div className="flex gap-3 justify-center">
-                      <ButtonLink to="/votes" variant="flat" size="lg">
+                      <ButtonLink
+                        to="/votes"
+                        variant="flat"
+                        size="lg"
+                        startContent={<List size={18} />}
+                      >
                         목록으로
                       </ButtonLink>
                       {data.status === 'OPEN' && (
@@ -66,6 +72,7 @@ function VoteResultPage() {
                           params={{ id }}
                           color="primary"
                           size="lg"
+                          startContent={<CheckSquare size={18} />}
                         >
                           투표하기
                         </ButtonLink>

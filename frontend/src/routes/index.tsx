@@ -4,6 +4,7 @@ import type { Selection } from "@heroui/react";
 import { useState } from "react";
 import { Suspense, ErrorBoundary } from "@suspensive/react";
 import { SuspenseQuery } from "@suspensive/react-query";
+import { LogIn } from "lucide-react";
 import { fetchMembers } from "@/features/auth/api/members.api";
 import { useAuthStore } from "@/features/auth/stores/authStore";
 import { LoginSuspenseLoader } from "@/features/auth/components/LoginSuspenseLoader";
@@ -76,6 +77,7 @@ function LoginPage() {
                         className="w-full"
                         isDisabled={!selectedMember}
                         onPress={handleLogin}
+                        startContent={<LogIn size={18} />}
                       >
                         로그인
                       </Button>
