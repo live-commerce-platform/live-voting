@@ -12,7 +12,11 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-  component: () => (
+  component: RootComponent,
+})
+
+function RootComponent() {
+  return (
     <AuthProvider>
       <Outlet />
       <TanStackDevtools
@@ -28,5 +32,5 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         ]}
       />
     </AuthProvider>
-  ),
-})
+  )
+}

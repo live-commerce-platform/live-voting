@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VotesRouteImport } from './routes/votes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VotesIndexRouteImport } from './routes/votes/index'
 import { Route as VotesNewRouteImport } from './routes/votes/new'
@@ -16,20 +17,25 @@ import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-qu
 import { Route as VotesIdVotingRouteImport } from './routes/votes/$id.voting'
 import { Route as VotesIdResultRouteImport } from './routes/votes/$id.result'
 
+const VotesRoute = VotesRouteImport.update({
+  id: '/votes',
+  path: '/votes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VotesIndexRoute = VotesIndexRouteImport.update({
-  id: '/votes/',
-  path: '/votes/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => VotesRoute,
 } as any)
 const VotesNewRoute = VotesNewRouteImport.update({
-  id: '/votes/new',
-  path: '/votes/new',
-  getParentRoute: () => rootRouteImport,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => VotesRoute,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
@@ -37,21 +43,22 @@ const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const VotesIdVotingRoute = VotesIdVotingRouteImport.update({
-  id: '/votes/$id/voting',
-  path: '/votes/$id/voting',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id/voting',
+  path: '/$id/voting',
+  getParentRoute: () => VotesRoute,
 } as any)
 const VotesIdResultRoute = VotesIdResultRouteImport.update({
-  id: '/votes/$id/result',
-  path: '/votes/$id/result',
-  getParentRoute: () => rootRouteImport,
+  id: '/$id/result',
+  path: '/$id/result',
+  getParentRoute: () => VotesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/votes': typeof VotesRouteWithChildren
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/votes/new': typeof VotesNewRoute
-  '/votes': typeof VotesIndexRoute
+  '/votes/': typeof VotesIndexRoute
   '/votes/$id/result': typeof VotesIdResultRoute
   '/votes/$id/voting': typeof VotesIdVotingRoute
 }
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/votes': typeof VotesRouteWithChildren
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/votes/new': typeof VotesNewRoute
   '/votes/': typeof VotesIndexRoute
@@ -76,9 +84,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/votes'
     | '/demo/tanstack-query'
     | '/votes/new'
-    | '/votes'
+    | '/votes/'
     | '/votes/$id/result'
     | '/votes/$id/voting'
   fileRoutesByTo: FileRoutesByTo
@@ -92,6 +101,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/votes'
     | '/demo/tanstack-query'
     | '/votes/new'
     | '/votes/'
@@ -101,15 +111,19 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  VotesRoute: typeof VotesRouteWithChildren
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
-  VotesNewRoute: typeof VotesNewRoute
-  VotesIndexRoute: typeof VotesIndexRoute
-  VotesIdResultRoute: typeof VotesIdResultRoute
-  VotesIdVotingRoute: typeof VotesIdVotingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/votes': {
+      id: '/votes'
+      path: '/votes'
+      fullPath: '/votes'
+      preLoaderRoute: typeof VotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -119,17 +133,17 @@ declare module '@tanstack/react-router' {
     }
     '/votes/': {
       id: '/votes/'
-      path: '/votes'
-      fullPath: '/votes'
+      path: '/'
+      fullPath: '/votes/'
       preLoaderRoute: typeof VotesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof VotesRoute
     }
     '/votes/new': {
       id: '/votes/new'
-      path: '/votes/new'
+      path: '/new'
       fullPath: '/votes/new'
       preLoaderRoute: typeof VotesNewRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof VotesRoute
     }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
@@ -140,28 +154,41 @@ declare module '@tanstack/react-router' {
     }
     '/votes/$id/voting': {
       id: '/votes/$id/voting'
-      path: '/votes/$id/voting'
+      path: '/$id/voting'
       fullPath: '/votes/$id/voting'
       preLoaderRoute: typeof VotesIdVotingRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof VotesRoute
     }
     '/votes/$id/result': {
       id: '/votes/$id/result'
-      path: '/votes/$id/result'
+      path: '/$id/result'
       fullPath: '/votes/$id/result'
       preLoaderRoute: typeof VotesIdResultRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof VotesRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+interface VotesRouteChildren {
+  VotesNewRoute: typeof VotesNewRoute
+  VotesIndexRoute: typeof VotesIndexRoute
+  VotesIdResultRoute: typeof VotesIdResultRoute
+  VotesIdVotingRoute: typeof VotesIdVotingRoute
+}
+
+const VotesRouteChildren: VotesRouteChildren = {
   VotesNewRoute: VotesNewRoute,
   VotesIndexRoute: VotesIndexRoute,
   VotesIdResultRoute: VotesIdResultRoute,
   VotesIdVotingRoute: VotesIdVotingRoute,
+}
+
+const VotesRouteWithChildren = VotesRoute._addFileChildren(VotesRouteChildren)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  VotesRoute: VotesRouteWithChildren,
+  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
