@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchVoteRecord } from '../api/votes.api'
 
-export const useVoteRecord = (voteId: string, voterId: string | undefined) => {
+export const useVoteRecord = (voteId: number, voterId: string | undefined) => {
   return useQuery({
     queryKey: ['voteRecord', voteId, voterId],
     queryFn: () => fetchVoteRecord(voteId, voterId!),

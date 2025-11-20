@@ -15,13 +15,14 @@ export const Route = createFileRoute("/votes/$id/result")({
 
 function VoteResultPage() {
   const { id } = Route.useParams();
+  const voteId = Number(id);
 
   return (
     <ErrorBoundary fallback={VoteResultErrorFallback}>
       <Suspense fallback={<VoteResultLoader />}>
         <SuspenseQuery
-          queryKey={["vote", id]}
-          queryFn={() => fetchVoteDetail(id)}
+          queryKey={["vote", voteId]}
+          queryFn={() => fetchVoteDetail(voteId)}
         >
           {({ data }) => {
             // 득표순으로 정렬

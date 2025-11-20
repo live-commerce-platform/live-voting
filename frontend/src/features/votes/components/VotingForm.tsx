@@ -17,8 +17,8 @@ export function VotingForm({
   existingRecord,
   currentUserId,
 }: VotingFormProps) {
-  const [selectedCandidate, setSelectedCandidate] = useState<string>(
-    existingRecord?.candidateId ? String(existingRecord.candidateId) : ""
+  const [selectedCandidate, setSelectedCandidate] = useState<number | undefined>(
+    existingRecord?.candidateId
   );
 
   const { mutate: submitVote, isPending } = useSubmitVote(vote.id);
@@ -29,7 +29,6 @@ export function VotingForm({
     if (!selectedCandidate) return;
 
     submitVote({
-      voteId: vote.id,
       candidateId: selectedCandidate,
       voterId: currentUserId,
     });
@@ -66,8 +65,8 @@ export function VotingForm({
           >
             <RadioGroup
               label="후보를 선택하세요"
-              value={selectedCandidate}
-              onValueChange={setSelectedCandidate}
+              value={selectedCandidate?.toString()}
+              onValueChange={(value) => setSelectedCandidate(Number(value))}
               isRequired
               classNames={{
                 base: "w-full",
@@ -76,7 +75,7 @@ export function VotingForm({
               {vote.candidates.map((candidate) => (
                 <Radio
                   key={candidate.id}
-                  value={candidate.id}
+                  value={candidate.id.toString()}
                   classNames={{
                     base: cn(
                       "m-0 bg-content1 hover:bg-content2 max-w-full",

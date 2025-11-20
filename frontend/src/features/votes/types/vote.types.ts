@@ -3,7 +3,7 @@ import { z } from 'zod'
 export type VoteStatus = 'OPEN' | 'CLOSED'
 
 export interface Vote {
-  id: string
+  id: number
   title: string
   status: VoteStatus
   author: string
@@ -15,7 +15,13 @@ export interface Vote {
 }
 
 export interface CloseVoteRequest {
-  id: string
+  id: number
+  authorId: string
+}
+
+export interface CloseVoteResponse {
+  id: number
+  status: string
 }
 
 export interface CreateVoteRequest {
@@ -24,8 +30,12 @@ export interface CreateVoteRequest {
   authorId: string
 }
 
+export interface CreateVoteResponse {
+  id: number
+}
+
 export interface VoteCandidate {
-  id: string
+  id: number
   name: string
   voteCount: number
 }
@@ -36,23 +46,22 @@ export interface VoteDetail extends Vote {
 }
 
 export interface SubmitVoteRequest {
-  voteId: string
-  candidateId: string
+  candidateId: number
   voterId: string
 }
 
 export interface VoteRecord {
-  voteId: string
-  candidateId: string
+  voteId: number
+  candidateId: number
   voterId: string
   votedAt: string
   updatedAt?: string
 }
 
-// Zod 스키마: 백엔드 응답 검증 및 타입 변환
+// Zod 스키마: 백엔드 응답 검증
 export const VoteRecordSchema = z.object({
-  voteId: z.coerce.string(),      // Long → string 자동 변환
-  candidateId: z.coerce.string(), // Long → string 자동 변환
+  voteId: z.number(),
+  candidateId: z.number(),
   voterId: z.string(),
   votedAt: z.string(),
   updatedAt: z.string().optional(),
@@ -60,9 +69,17 @@ export const VoteRecordSchema = z.object({
 
 // WebSocket 이벤트 타입
 export interface VoteCreatedEvent {
-  id: string
+  id: number
   title: string
   author: string
   authorId: string
   createdAt: string
+}
+
+// 개인용 알림 이벤트 타입
+export interface VoteNotification {
+  message: string
+  voteId: number
+  voterId: string
+  timestamp: string
 }

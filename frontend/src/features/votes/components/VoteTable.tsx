@@ -35,14 +35,14 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
 
   const handleRowClick = (vote: Vote) => {
     if (vote.status === "OPEN") {
-      navigate({ to: `/votes/$id/voting`, params: { id: vote.id } });
+      navigate({ to: `/votes/$id/voting`, params: { id: String(vote.id) } });
     } else {
-      navigate({ to: `/votes/$id/result`, params: { id: vote.id } });
+      navigate({ to: `/votes/$id/result`, params: { id: String(vote.id) } });
     }
   };
 
-  const handleCloseVote = (voteId: string) => {
-    closeVoteMutation.mutate(voteId);
+  const handleCloseVote = (voteId: number, authorId: string) => {
+    closeVoteMutation.mutate({ id: voteId, authorId });
   };
 
   const renderCell = (vote: Vote, columnKey: React.Key) => {
@@ -66,7 +66,7 @@ export const VoteTable = ({ data = [], isLoading }: VoteTableProps) => {
                 color="danger"
                 size="sm"
                 startContent={<XCircle className="w-4 h-4" />}
-                onPress={() => handleCloseVote(vote.id)}
+                onPress={() => handleCloseVote(vote.id, vote.authorId)}
                 isLoading={closeVoteMutation.isPending}
               >
                 종료

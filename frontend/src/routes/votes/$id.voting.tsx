@@ -15,6 +15,7 @@ export const Route = createFileRoute('/votes/$id/voting')({
 
 function VotingPage() {
   const { id } = Route.useParams()
+  const voteId = Number(id)
   const currentUser = useAuthStore((state) => state.currentUser)
   const navigate = useNavigate()
 
@@ -22,8 +23,8 @@ function VotingPage() {
     <ErrorBoundary fallback={VotingErrorFallback}>
       <Suspense fallback={<VotingLoader />}>
         <SuspenseQuery
-          queryKey={['vote', id]}
-          queryFn={() => fetchVoteDetail(id)}
+          queryKey={['vote', voteId]}
+          queryFn={() => fetchVoteDetail(voteId)}
         >
           {({ data }) => {
             // 투표가 종료된 경우 결과 페이지로 리다이렉트
@@ -42,7 +43,7 @@ function VotingPage() {
               )
             }
 
-            const { data: existingRecord } = useVoteRecord(data.id, currentUser.id)
+            const { data: existingRecord } = useVoteRecord(voteId, currentUser.id)
 
             return (
               <VotingForm
