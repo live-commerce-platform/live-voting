@@ -1,5 +1,6 @@
 import { apiClient } from '@/shared/lib/api'
 import type { CreateVoteRequest, Vote, VoteDetail, SubmitVoteRequest, VoteRecord } from '../types/vote.types'
+import { VoteRecordSchema } from '../types/vote.types'
 
 // 투표 목록 조회
 export const fetchVotes = async (): Promise<Vote[]> => {
@@ -23,14 +24,16 @@ export const fetchVoteDetail = async (id: string): Promise<VoteDetail> => {
 
 // 투표 제출
 export const submitVote = async (data: SubmitVoteRequest): Promise<VoteRecord> => {
-  return apiClient.post(`api/votes/${data.voteId}/submit`, { json: data }).json<VoteRecord>()
+  const response = await apiClient.post(`api/votes/${data.voteId}/submit`, { json: data }).json()
+  return VoteRecordSchema.parse(response) as VoteRecord
 }
 
 // 투표 기록 조회
 export const fetchVoteRecord = async (voteId: string, voterId: string): Promise<VoteRecord | null> => {
-  return apiClient
+  const response = await apiClient
     .get(`api/votes/${voteId}/vote-record`, {
       searchParams: { voterId },
     })
-    .json<VoteRecord | null>()
+    .json()
+  return VoteRecordSchema.parse(response)
 }

@@ -18,7 +18,7 @@ export function VotingForm({
   currentUserId,
 }: VotingFormProps) {
   const [selectedCandidate, setSelectedCandidate] = useState<string>(
-    existingRecord?.candidateId || ""
+    existingRecord?.candidateId ? String(existingRecord.candidateId) : ""
   );
 
   const { mutate: submitVote, isPending } = useSubmitVote(vote.id);

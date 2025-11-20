@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export type VoteStatus = 'OPEN' | 'CLOSED'
 
 export interface Vote {
@@ -46,6 +48,15 @@ export interface VoteRecord {
   votedAt: string
   updatedAt?: string
 }
+
+// Zod 스키마: 백엔드 응답 검증 및 타입 변환
+export const VoteRecordSchema = z.object({
+  voteId: z.coerce.string(),      // Long → string 자동 변환
+  candidateId: z.coerce.string(), // Long → string 자동 변환
+  voterId: z.string(),
+  votedAt: z.string(),
+  updatedAt: z.string().optional(),
+}).nullable() // null 응답 허용
 
 // WebSocket 이벤트 타입
 export interface VoteCreatedEvent {
