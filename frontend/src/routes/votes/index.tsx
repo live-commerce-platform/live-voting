@@ -21,7 +21,7 @@ function VotesPage() {
     showVoteNotification("새로운 투표가 생성되었습니다", vote.title, () => {
       navigate({
         to: "/votes/$id/voting",
-        params: { id: vote.id },
+        params: { id: String(vote.id) },
       });
     });
 
