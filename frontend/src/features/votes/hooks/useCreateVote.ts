@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { createVote } from '../api/votes.api'
-import type { CreateVoteRequest } from '../types/vote.types'
 
 export const useCreateVote = () => {
   const queryClient = useQueryClient()

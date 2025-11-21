@@ -38,8 +38,8 @@ export function useVoteWebSocket({
       return
     }
 
-    // 개발 환경에서는 MSW Mock WebSocket 사용
-    if (import.meta.env.DEV && import.meta.env.MODE === 'development') {
+    // MSW가 활성화된 개발 환경에서는 Mock WebSocket 사용
+    if (import.meta.env.MODE === 'development' && import.meta.env.VITE_ENABLE_MSW === 'true') {
       console.log('[WebSocket] MSW Mock WebSocket 사용 (개발 환경)')
       setIsConnected(true)
       setError(null)

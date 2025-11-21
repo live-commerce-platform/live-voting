@@ -12,7 +12,7 @@ import type { VoteCreatedEvent, VoteNotification } from '@/features/votes/types/
  * 개발 환경에서만 동작하며, 실제 WebSocket 대신 브라우저 이벤트로 시뮬레이션합니다.
  */
 export function emitVoteCreatedEvent(vote: VoteCreatedEvent) {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.MODE === 'development' && import.meta.env.VITE_ENABLE_MSW === 'true') {
     console.log('[MSW WebSocket] 투표 생성 이벤트 발행:', vote)
 
     // CustomEvent를 사용하여 WebSocket 메시지 시뮬레이션
@@ -29,7 +29,7 @@ export function emitVoteCreatedEvent(vote: VoteCreatedEvent) {
  * 개발 환경에서만 동작하며, 실제 WebSocket 대신 브라우저 이벤트로 시뮬레이션합니다.
  */
 export function emitVoteSubmittedEvent(notification: VoteNotification) {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.MODE === 'development' && import.meta.env.VITE_ENABLE_MSW === 'true') {
     console.log('[MSW WebSocket] 투표 제출 알림 이벤트 발행:', notification)
 
     const event = new CustomEvent('mock-websocket-vote-submitted', {
@@ -83,8 +83,8 @@ export function setupMockWebSocketListener(
  * ```
  */
 export function startMockWebSocketSimulation(intervalMs = 30000) {
-  if (!import.meta.env.DEV) {
-    console.warn('WebSocket 시뮬레이션은 개발 환경에서만 동작합니다.')
+  if (import.meta.env.MODE !== 'development' || import.meta.env.VITE_ENABLE_MSW !== 'true') {
+    console.warn('WebSocket 시뮬레이션은 MSW가 활성화된 개발 환경에서만 동작합니다.')
     return () => {}
   }
 
@@ -113,7 +113,7 @@ export function startMockWebSocketSimulation(intervalMs = 30000) {
       mockVotes[Math.floor(Math.random() * mockVotes.length)]
     const voteEvent: VoteCreatedEvent = {
       ...randomVote,
-      id: `vote-${Date.now()}-${counter++}`,
+      id: Date.now() + counter++,
       createdAt: new Date().toISOString(),
     }
 
@@ -130,8 +130,8 @@ export function startMockWebSocketSimulation(intervalMs = 30000) {
   }
 }
 
-// 개발 환경에서 전역으로 노출 (브라우저 콘솔에서 테스트 가능)
-if (import.meta.env.DEV) {
+// MSW가 활성화된 개발 환경에서 전역으로 노출 (브라우저 콘솔에서 테스트 가능)
+if (import.meta.env.MODE === 'development' && import.meta.env.VITE_ENABLE_MSW === 'true') {
   ;(window as any).__mockWebSocket = {
     emitVoteCreated: emitVoteCreatedEvent,
     emitVoteSubmitted: emitVoteSubmittedEvent,

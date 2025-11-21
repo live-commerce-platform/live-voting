@@ -118,7 +118,7 @@ export function VotingForm({
             </ButtonLink>
             <ButtonLink
               to="/votes/$id/result"
-              params={{ id: vote.id }}
+              params={{ id: String(vote.id) }}
               size="lg"
               color="success"
               startContent={<BarChart3 size={18} />}
