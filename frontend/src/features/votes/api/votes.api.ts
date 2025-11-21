@@ -33,7 +33,7 @@ export const fetchVoteDetail = async (id: number): Promise<VoteDetail> => {
 
 // 투표 제출
 export const submitVote = async (voteId: number, data: SubmitVoteRequest): Promise<VoteRecord> => {
-  const response = await apiClient.post(`api/votes/${voteId}/submit`, { json: data }).json()
+  const response = await apiClient.post(`api/votes/${voteId}/vote`, { json: data }).json()
   return VoteRecordSchema.parse(response) as VoteRecord
 }
 

@@ -168,7 +168,7 @@ export const voteHandlers = [
   }),
 
   // 투표 제출
-  http.post("/api/votes/:id/submit", async ({ params, request }) => {
+  http.post("/api/votes/:id/vote", async ({ params, request }) => {
     const { id } = params;
     const voteId = Number(id);
     const body = (await request.json()) as SubmitVoteRequest;
