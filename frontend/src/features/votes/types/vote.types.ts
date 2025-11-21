@@ -75,11 +75,3 @@ export interface VoteCreatedEvent {
   authorId: string
   createdAt: string
 }
-
-// 개인용 알림 이벤트 타입
-export interface VoteNotification {
-  message: string
-  voteId: number
-  voterId: string
-  timestamp: string
-}

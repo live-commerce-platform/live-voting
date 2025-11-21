@@ -5,7 +5,7 @@
  * 브라우저의 CustomEvent를 사용하여 가상 WebSocket 메시지를 발행합니다.
  */
 
-import type { VoteCreatedEvent, VoteNotification } from '@/features/votes/types/vote.types'
+import type { VoteCreatedEvent } from '@/features/votes/types/vote.types'
 
 /**
  * 새로운 투표 생성 이벤트를 발행합니다.
@@ -25,45 +25,21 @@ export function emitVoteCreatedEvent(vote: VoteCreatedEvent) {
 }
 
 /**
- * 투표 제출 알림 이벤트를 발행합니다. (개인용 알림)
- * 개발 환경에서만 동작하며, 실제 WebSocket 대신 브라우저 이벤트로 시뮬레이션합니다.
- */
-export function emitVoteSubmittedEvent(notification: VoteNotification) {
-  if (import.meta.env.MODE === 'development' && import.meta.env.VITE_ENABLE_MSW === 'true') {
-    console.log('[MSW WebSocket] 투표 제출 알림 이벤트 발행:', notification)
-
-    const event = new CustomEvent('mock-websocket-vote-submitted', {
-      detail: notification,
-    })
-
-    window.dispatchEvent(event)
-  }
-}
-
-/**
  * MSW WebSocket 이벤트 리스너를 등록합니다.
  * useVoteWebSocket 훅에서 실제 WebSocket 대신 이 리스너를 사용할 수 있습니다.
  */
 export function setupMockWebSocketListener(
-  onVoteCreated: (vote: VoteCreatedEvent) => void,
-  onVoteSubmitted?: (notification: VoteNotification) => void
+  onVoteCreated: (vote: VoteCreatedEvent) => void
 ) {
   const voteCreatedHandler = (event: Event) => {
     const customEvent = event as CustomEvent<VoteCreatedEvent>
     onVoteCreated(customEvent.detail)
   }
 
-  const voteSubmittedHandler = (event: Event) => {
-    const customEvent = event as CustomEvent<VoteNotification>
-    onVoteSubmitted?.(customEvent.detail)
-  }
-
   window.addEventListener('mock-websocket-vote-created', voteCreatedHandler)
-  window.addEventListener('mock-websocket-vote-submitted', voteSubmittedHandler)
 
   return () => {
     window.removeEventListener('mock-websocket-vote-created', voteCreatedHandler)
-    window.removeEventListener('mock-websocket-vote-submitted', voteSubmittedHandler)
   }
 }
 
@@ -134,14 +110,12 @@ export function startMockWebSocketSimulation(intervalMs = 30000) {
 if (import.meta.env.MODE === 'development' && import.meta.env.VITE_ENABLE_MSW === 'true') {
   ;(window as any).__mockWebSocket = {
     emitVoteCreated: emitVoteCreatedEvent,
-    emitVoteSubmitted: emitVoteSubmittedEvent,
     startSimulation: startMockWebSocketSimulation,
   }
 
   console.log(
     '[MSW WebSocket] 개발 도구 사용 가능:\n' +
       '  __mockWebSocket.emitVoteCreated({ id, title, author, authorId, createdAt })\n' +
-      '  __mockWebSocket.emitVoteSubmitted({ message, voteId, voterId, timestamp })\n' +
       '  __mockWebSocket.startSimulation(intervalMs)'
   )
 }
