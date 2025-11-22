@@ -1,4 +1,5 @@
-import { addToast, Button } from "@heroui/react";
+import { addToast } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { CheckSquareIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -13,21 +14,21 @@ import type { ReactNode } from "react";
  * @param onAction - "투표하기" 버튼 클릭 시 실행할 함수
  */
 export function showVoteNotification(
-	title: string,
-	description: string,
-	onAction: () => void,
+  title: string,
+  description: string,
+  onAction: () => void
 ) {
-	return addToast({
-		title,
-		description,
-		timeout: 5000,
-		endContent: (
-			<Button size="sm" variant="flat" color="primary" onPress={onAction}>
-				<CheckSquareIcon size={18} />
-				투표하기
-			</Button>
-		),
-	});
+  return addToast({
+    title,
+    description,
+    timeout: 5000,
+    endContent: (
+      <Button size="sm" variant="flat" color="primary" onPress={onAction}>
+        <CheckSquareIcon size={18} />
+        투표하기
+      </Button>
+    ),
+  });
 }
 
 /**
@@ -38,21 +39,21 @@ export function showVoteNotification(
  * @param options - 추가 옵션
  */
 export function showSuccessToast(
-	title: string,
-	description?: string,
-	options?: {
-		timeout?: number;
-		endContent?: ReactNode;
-	},
+  title: string,
+  description?: string,
+  options?: {
+    timeout?: number;
+    endContent?: ReactNode;
+  }
 ) {
-	return addToast({
-		title,
-		description,
-		color: "success",
-		variant: "flat",
-		timeout: options?.timeout ?? 5000,
-		endContent: options?.endContent,
-	});
+  return addToast({
+    title,
+    description,
+    color: "success",
+    variant: "flat",
+    timeout: options?.timeout ?? 5000,
+    endContent: options?.endContent,
+  });
 }
 
 /**
@@ -63,21 +64,21 @@ export function showSuccessToast(
  * @param options - 추가 옵션
  */
 export function showErrorToast(
-	title: string,
-	description?: string,
-	options?: {
-		timeout?: number;
-		endContent?: ReactNode;
-	},
+  title: string,
+  description?: string,
+  options?: {
+    timeout?: number;
+    endContent?: ReactNode;
+  }
 ) {
-	return addToast({
-		title,
-		description,
-		color: "danger",
-		variant: "flat",
-		timeout: options?.timeout ?? 5000,
-		endContent: options?.endContent,
-	});
+  return addToast({
+    title,
+    description,
+    color: "danger",
+    variant: "flat",
+    timeout: options?.timeout ?? 5000,
+    endContent: options?.endContent,
+  });
 }
 
 /**
@@ -88,21 +89,21 @@ export function showErrorToast(
  * @param options - 추가 옵션
  */
 export function showInfoToast(
-	title: string,
-	description?: string,
-	options?: {
-		timeout?: number;
-		endContent?: ReactNode;
-	},
+  title: string,
+  description?: string,
+  options?: {
+    timeout?: number;
+    endContent?: ReactNode;
+  }
 ) {
-	return addToast({
-		title,
-		description,
-		color: "default",
-		variant: "flat",
-		timeout: options?.timeout ?? 5000,
-		endContent: options?.endContent,
-	});
+  return addToast({
+    title,
+    description,
+    color: "default",
+    variant: "flat",
+    timeout: options?.timeout ?? 5000,
+    endContent: options?.endContent,
+  });
 }
 
 /**
@@ -113,19 +114,19 @@ export function showInfoToast(
  * @param options - 추가 옵션
  */
 export function showWarningToast(
-	title: string,
-	description?: string,
-	options?: {
-		timeout?: number;
-		endContent?: ReactNode;
-	},
+  title: string,
+  description?: string,
+  options?: {
+    timeout?: number;
+    endContent?: ReactNode;
+  }
 ) {
-	return addToast({
-		title,
-		description,
-		color: "warning",
-		variant: "flat",
-		timeout: options?.timeout ?? 5000,
-		endContent: options?.endContent,
-	});
+  return addToast({
+    title,
+    description,
+    color: "warning",
+    variant: "flat",
+    timeout: options?.timeout ?? 5000,
+    endContent: options?.endContent,
+  });
 }

@@ -1,6 +1,6 @@
-import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 
 import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provider.tsx";
 
@@ -8,69 +8,69 @@ import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provi
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
-import { HeroUIProvider } from "@heroui/system";
 import reportWebVitals from "./reportWebVitals.ts";
+import { HeroUIProvider } from "@heroui/system";
 
 // Enable MSW in development mode
 async function enableMocking() {
-	if (import.meta.env.MODE !== "development") {
-		return;
-	}
+  if (import.meta.env.MODE !== 'development') {
+    return
+  }
 
-	// 환경 변수로 MSW 활성화 여부 확인 (기본값: false)
-	const isMswEnabled = import.meta.env.VITE_ENABLE_MSW === "true";
+  // 환경 변수로 MSW 활성화 여부 확인 (기본값: false)
+  const isMswEnabled = import.meta.env.VITE_ENABLE_MSW === 'true'
 
-	if (!isMswEnabled) {
-		console.info("🔌 MSW가 비활성화되었습니다. 실제 API를 사용합니다.");
-		return;
-	}
+  if (!isMswEnabled) {
+    console.info('🔌 MSW가 비활성화되었습니다. 실제 API를 사용합니다.')
+    return
+  }
 
-	console.info("🎭 MSW가 활성화되었습니다. Mock API를 사용합니다.");
+  console.info('🎭 MSW가 활성화되었습니다. Mock API를 사용합니다.')
 
-	const { worker } = await import("./shared/lib/msw/browser");
+  const { worker } = await import('./shared/lib/msw/browser')
 
-	return worker.start({
-		onUnhandledRequest: "warn",
-	});
+  return worker.start({
+    onUnhandledRequest: 'warn',
+  })
 }
 
 // Create a new router instance
 
 const TanStackQueryProviderContext = TanStackQueryProvider.getContext();
 const router = createRouter({
-	routeTree,
-	context: {
-		...TanStackQueryProviderContext,
-	},
-	defaultPreload: "intent",
-	scrollRestoration: true,
-	defaultStructuralSharing: true,
-	defaultPreloadStaleTime: 0,
+  routeTree,
+  context: {
+    ...TanStackQueryProviderContext,
+  },
+  defaultPreload: "intent",
+  scrollRestoration: true,
+  defaultStructuralSharing: true,
+  defaultPreloadStaleTime: 0,
 });
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
-	interface Register {
-		router: typeof router;
-	}
+  interface Register {
+    router: typeof router;
+  }
 }
 
 // Render the app
 enableMocking().then(() => {
-	const rootElement = document.getElementById("app");
-	if (rootElement && !rootElement.innerHTML) {
-		const root = ReactDOM.createRoot(rootElement);
-		root.render(
-			<StrictMode>
-				<HeroUIProvider>
-					<TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-						<RouterProvider router={router} />
-					</TanStackQueryProvider.Provider>
-				</HeroUIProvider>
-			</StrictMode>,
-		);
-	}
-});
+  const rootElement = document.getElementById("app");
+  if (rootElement && !rootElement.innerHTML) {
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <StrictMode>
+        <HeroUIProvider>
+          <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+            <RouterProvider router={router} />
+          </TanStackQueryProvider.Provider>
+        </HeroUIProvider>
+      </StrictMode>
+    );
+  }
+})
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

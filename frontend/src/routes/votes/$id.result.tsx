@@ -1,90 +1,91 @@
-import { ErrorBoundary, Suspense } from "@suspensive/react";
-import { SuspenseQuery } from "@suspensive/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckSquare, List } from "lucide-react";
-import { ButtonLink } from "@/components/ButtonLink";
+import { Suspense, ErrorBoundary } from "@suspensive/react";
+import { SuspenseQuery } from "@suspensive/react-query";
 import { fetchVoteDetail } from "@/features/votes/api/votes.api";
-import { VoteResultErrorFallback } from "@/features/votes/components/VoteResultErrorFallback";
+import { VoteStatusBadge } from "@/features/votes/components/VoteStatusBadge";
 import { VoteResultItem } from "@/features/votes/components/VoteResultItem";
 import { VoteResultLoader } from "@/features/votes/components/VoteResultLoader";
-import { VoteStatusBadge } from "@/features/votes/components/VoteStatusBadge";
+import { VoteResultErrorFallback } from "@/features/votes/components/VoteResultErrorFallback";
+import { ButtonLink } from "@/components/ButtonLink";
+import { List, CheckSquare } from "lucide-react";
 
 export const Route = createFileRoute("/votes/$id/result")({
-	component: VoteResultPage,
+  component: VoteResultPage,
 });
 
 function VoteResultPage() {
-	const { id } = Route.useParams();
+  const { id } = Route.useParams();
+  const voteId = Number(id);
 
-	return (
-		<ErrorBoundary fallback={VoteResultErrorFallback}>
-			<Suspense fallback={<VoteResultLoader />}>
-				<SuspenseQuery
-					queryKey={["vote", id]}
-					queryFn={() => fetchVoteDetail(id)}
-				>
-					{({ data }) => {
-						// 득표순으로 정렬
-						const sortedCandidates = [...data.candidates].sort(
-							(a, b) => b.voteCount - a.voteCount,
-						);
+  return (
+    <ErrorBoundary fallback={VoteResultErrorFallback}>
+      <Suspense fallback={<VoteResultLoader />}>
+        <SuspenseQuery
+          queryKey={["vote", voteId]}
+          queryFn={() => fetchVoteDetail(voteId)}
+        >
+          {({ data }) => {
+            // 득표순으로 정렬
+            const sortedCandidates = [...data.candidates].sort(
+              (a, b) => b.voteCount - a.voteCount
+            );
 
-						return (
-							<div className="min-h-screen">
-								<div className="container mx-auto px-4 py-12 max-w-2xl">
-									<div className="space-y-8">
-										{/* 헤더 */}
-										<div className="text-center space-y-2">
-											<VoteStatusBadge status={data.status} />
-											<h1 className="text-3xl font-bold text-gray-900">
-												{data.title}
-											</h1>
-											<p className="text-sm text-gray-600">
-												총 {data.totalVotes}명이 참여했습니다
-											</p>
-										</div>
+            return (
+              <div className="min-h-screen">
+                <div className="container mx-auto px-4 py-12 max-w-2xl">
+                  <div className="space-y-8">
+                    {/* 헤더 */}
+                    <div className="text-center space-y-2">
+                      <VoteStatusBadge status={data.status} />
+                      <h1 className="text-3xl font-bold text-gray-900">
+                        {data.title}
+                      </h1>
+                      <p className="text-sm text-gray-600">
+                        총 {data.totalVotes}명이 참여했습니다
+                      </p>
+                    </div>
 
-										{/* 결과 목록 */}
-										<div className="space-y-6">
-											{sortedCandidates.map((candidate, index) => (
-												<VoteResultItem
-													key={candidate.id}
-													candidate={candidate}
-													totalVotes={data.totalVotes}
-													rank={index + 1}
-												/>
-											))}
-										</div>
+                    {/* 결과 목록 */}
+                    <div className="space-y-6">
+                      {sortedCandidates.map((candidate, index) => (
+                        <VoteResultItem
+                          key={candidate.id}
+                          candidate={candidate}
+                          totalVotes={data.totalVotes}
+                          rank={index + 1}
+                        />
+                      ))}
+                    </div>
 
-										{/* 하단 액션 */}
-										<div className="flex gap-3 justify-center">
-											<ButtonLink
-												to="/votes"
-												variant="flat"
-												size="lg"
-												startContent={<List size={18} />}
-											>
-												목록으로
-											</ButtonLink>
-											{data.status === "OPEN" && (
-												<ButtonLink
-													to="/votes/$id/voting"
-													params={{ id }}
-													color="primary"
-													size="lg"
-													startContent={<CheckSquare size={18} />}
-												>
-													투표하기
-												</ButtonLink>
-											)}
-										</div>
-									</div>
-								</div>
-							</div>
-						);
-					}}
-				</SuspenseQuery>
-			</Suspense>
-		</ErrorBoundary>
-	);
+                    {/* 하단 액션 */}
+                    <div className="flex gap-3 justify-center">
+                      <ButtonLink
+                        to="/votes"
+                        variant="flat"
+                        size="lg"
+                        startContent={<List size={18} />}
+                      >
+                        목록으로
+                      </ButtonLink>
+                      {data.status === 'OPEN' && (
+                        <ButtonLink
+                          to="/votes/$id/voting"
+                          params={{ id }}
+                          color="primary"
+                          size="lg"
+                          startContent={<CheckSquare size={18} />}
+                        >
+                          투표하기
+                        </ButtonLink>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          }}
+        </SuspenseQuery>
+      </Suspense>
+    </ErrorBoundary>
+  );
 }

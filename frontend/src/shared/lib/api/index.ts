@@ -1,2 +1,2 @@
-export { HTTPError, isHTTPError, isTimeoutError, TimeoutError } from "ky";
-export { apiClient } from "./client";
+export { apiClient } from './client'
+export { HTTPError, TimeoutError, isHTTPError, isTimeoutError } from 'ky'
