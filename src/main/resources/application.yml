@@ -1,0 +1,37 @@
+# Spring Boot 애플리케이션 관련 설정
+spring:
+  # 애플리케이션 이름 설정
+  application:
+    name: live-voting
+
+  # JPA (Java Persistence API) 관련 설정
+  jpa:
+    # 실행되는 SQL 쿼리를 로그에 표시할지 여부 설정
+    show-sql: true
+
+  # 데이터베이스 연결 정보 설정
+  datasource:
+    # JDBC 드라이버 클래스 이름
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 데이터베이스 연결 URL
+    url: jdbc:mysql://localhost:3306/voting_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    # 데이터베이스 사용자 이름
+    username: app_user
+    # 데이터베이스 비밀번호
+    password: password1234
+
+# 로깅 관련 설정
+logging:
+  # 각 패키지별 로그 레벨 설정
+  level:
+    org:
+      springframework:
+        # Spring Messaging 관련 로그 레벨
+        messaging: trace
+        # Spring Web 관련 로그 레벨
+        web: debug
+      hibernate:
+        type:
+          descriptor:
+            # Hibernate SQL 파라미터 바인딩 로그 레벨
+            sql: trace

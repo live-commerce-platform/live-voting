@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/live-voting-answer.iml" filepath="$PROJECT_DIR$/live-voting-answer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1912320385/live-voting.main.iml" filepath="$PROJECT_DIR$/.idea/modules/-1912320385/live-voting.main.iml" />
+    </modules>
+  </component>
+</project>
