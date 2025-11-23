@@ -45,22 +45,27 @@
 
 ### 화면 구성
 
-#### 1. 투표 목록 페이지
-![투표 목록](https://github.com/user-attachments/assets/93eb9ea6-4da5-4f78-a662-57416d4daed0)
+#### 1. 로그인 페이지
+![로그인](https://github.com/user-attachments/assets/93eb9ea6-4da5-4f78-a662-57416d4daed0)
+
+멤버 목록에서 사용자를 선택하여 로그인합니다.
+
+#### 2. 투표 목록 페이지
+![투표 목록](https://github.com/user-attachments/assets/77db70c0-90f3-488b-b168-7b1fd00c93f0)
 
 진행 중인 투표와 종료된 투표를 테이블 형태로 확인할 수 있습니다.
 
-#### 2. 투표 생성 페이지
+#### 3. 투표 생성 페이지
 ![투표 생성](https://github.com/user-attachments/assets/210ffada-08e8-4d65-976b-cc00830f29d0)
 
 투표 제목과 후보자 목록을 입력하여 새로운 투표를 생성합니다.
 
-#### 3. 투표 참여 페이지
+#### 4. 투표 참여 페이지
 ![투표 참여](https://github.com/user-attachments/assets/f758f818-b45e-4e9d-b258-cc38ae558780)
 
 후보자 중 하나를 선택하여 투표하거나 기존 선택을 변경할 수 있습니다.
 
-#### 4. 투표 결과 페이지
+#### 5. 투표 결과 페이지
 ![투표 결과](https://github.com/user-attachments/assets/42bcd5d9-c7aa-4c69-a14a-086552f5e685)
 
 득표율과 득표 수를 막대 그래프로 시각화하여 확인합니다.
